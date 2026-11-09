@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4P และ 5 Product Levels · METRANS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* layout idea (analysis doc for the team): short statement hero with a segment picker → 5 levels as sticky onion + scrolling level cards → 4P × segment matrix → shared principles bento → trip route (3P) → gaps + checklist */
+:root{
+  --ink:#0A2E1F; --navy:#0C7242; --navy-deep:#08502F; --sky:#1C9A5F;
+  --red:#AF0909; --red-deep:#7C0505; --red-soft:#FBE7E5;
+  --amber:#D9A441; --amber-deep:#A9781F; --amber-soft:#FBF0DA; --amber-text:#8A5F12;
+  --green-soft:#E3F4EC;
+  --paper:#FFFFFF; --paper-2:#FAF8F4; --tint:#F7F4EE; --chip:#F3F0EA; --slate:#6E655A; --line:#E6DDCE;
+  --r-lg:24px; --r:18px;
+  --sh-1:0 1px 3px rgba(10,46,31,.06),0 10px 26px -10px rgba(10,46,31,.16);
+  --sh-2:0 2px 6px rgba(10,46,31,.06),0 24px 48px -16px rgba(10,46,31,.24);
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --f:'Prompt',Tahoma,system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{font-family:var(--f);font-weight:300;color:var(--ink);background:var(--paper);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{width:min(1180px,calc(100% - 32px));margin-inline:auto}
+h1,h2,h3,h4{line-height:1.25;text-wrap:balance}
+b,strong{font-weight:500}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px;border-radius:8px}
+.ph{color:var(--amber-text);font-weight:500;white-space:nowrap}
+
+/* top bar */
+.top{position:fixed;inset:0 0 auto;z-index:70;background:rgba(255,255,255,.78);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);box-shadow:0 1px 0 var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:1rem}
+.mark{display:flex;align-items:center;gap:.65rem;color:var(--ink);font-weight:600;font-size:.98rem;text-decoration:none;min-width:0}
+.mark i{width:11px;height:22px;border-radius:3px;background:linear-gradient(160deg,var(--red) 0 50%,var(--sky) 50% 100%);transform:skewX(-5deg);flex:none}
+.mark em{font-style:normal;font-weight:300;font-size:.8rem;color:var(--slate);border-left:1px solid var(--line);padding-left:.65rem;white-space:nowrap}
+.top nav{display:flex;gap:.2rem}
+.top nav a{color:var(--slate);text-decoration:none;font-size:.82rem;padding:.38rem .8rem;border-radius:99px;transition:.25s}
+.top nav a:hover,.top nav a.on{color:var(--ink);background:rgba(12,114,66,.07)}
+.prog{position:absolute;left:0;bottom:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--red),var(--amber),var(--sky))}
+@media(max-width:860px){.top nav{display:none}}
+@media(max-width:520px){.mark em{display:none}}
+
+/* hero: statement first */
+.hero{position:relative;overflow:hidden;isolation:isolate;padding:112px 0 64px}
+.hero::before{content:"";position:absolute;inset:-20%;z-index:-2;background:radial-gradient(36% 46% at 8% 12%,rgba(12,114,66,.12),transparent 70%),radial-gradient(30% 40% at 94% 80%,rgba(175,9,9,.08),transparent 70%),radial-gradient(28% 36% at 70% 4%,rgba(217,164,65,.16),transparent 70%);animation:drift 22s ease-in-out infinite alternate}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background-image:linear-gradient(rgba(10,46,31,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(10,46,31,.045) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(70% 80% at 30% 40%,#000,transparent);-webkit-mask-image:radial-gradient(70% 80% at 30% 40%,#000,transparent)}
+@keyframes drift{to{transform:translate3d(-3%,2%,0) rotate(3deg)}}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:3rem;align-items:end}
+.eyebrow{font-size:.72rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;display:inline-flex;align-items:center;gap:.6rem;color:var(--red)}
+.eyebrow::before{content:"";width:26px;height:2px;border-radius:2px;background:currentColor}
+.eyebrow.th{letter-spacing:0;font-size:.82rem;text-transform:none}
+.hero h1{font-weight:700;font-size:clamp(2.1rem,4.6vw,3.6rem);letter-spacing:-.035em;line-height:1.12;margin-top:1rem}
+.hero h1 em{display:block;font-style:normal;background:linear-gradient(95deg,var(--red),#D0261A 55%,#B3842A);-webkit-background-clip:text;background-clip:text;color:transparent;padding:.06em 0}
+.hero .sub{margin-top:1.1rem;max-width:36rem;color:var(--slate);font-size:1rem;line-height:1.8}
+.scope{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1.4rem}
+.scope span{font-size:.8rem;font-weight:400;padding:.38rem .85rem;border-radius:99px;background:#fff;box-shadow:var(--sh-1)}
+.scope span.no{background:var(--red-soft);color:var(--red-deep);box-shadow:none;font-weight:500}
+.picker{background:rgba(255,255,255,.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-2);padding:1.3rem}
+.picker h2{font-size:1rem;font-weight:600}
+.picker p.hint{font-size:.8rem;color:var(--slate);margin-top:.2rem}
+.pk{display:grid;gap:.5rem;margin-top:.9rem}
+.pk button{display:grid;grid-template-columns:auto 1fr;gap:.8rem;align-items:center;text-align:left;border:0;cursor:pointer;background:var(--paper-2);border-radius:16px;padding:.7rem .85rem;transition:background .3s,transform .35s var(--ease),box-shadow .35s}
+.pk button:hover{transform:translateX(3px);background:#fff;box-shadow:var(--sh-1)}
+.pk button b{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:1.05rem;font-weight:600;background:#fff;color:var(--red);box-shadow:var(--sh-1);transition:.3s}
+.pk button span{font-size:.9rem;font-weight:500;line-height:1.35}
+.pk button small{display:block;font-size:.76rem;font-weight:300;color:var(--slate)}
+.pk button[aria-pressed=true]{background:#fff;box-shadow:0 0 0 2px var(--red),var(--sh-1)}
+.pk button[aria-pressed=true] b{background:var(--red);color:#fff}
+.pk .all{grid-template-columns:1fr;text-align:center;font-size:.8rem;font-weight:500;color:var(--slate);padding:.5rem}
+@media(max-width:900px){.hero{padding:96px 0 48px}.hero-grid{grid-template-columns:1fr;gap:2rem;align-items:start}}
+
+/* bands */
+.band{position:relative;padding:5.5rem 0 5rem}
+.band.tint{background:var(--tint);isolation:isolate}
+.band.tint::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(45% 40% at 6% 0%,rgba(12,114,66,.07),transparent 70%),radial-gradient(40% 35% at 96% 80%,rgba(217,164,65,.12),transparent 70%)}
+.edge-t,.edge-b{position:absolute;left:0;right:0;height:60px;width:100%}
+.edge-t{top:-1px}.edge-b{bottom:-1px}
+.edge-t path,.edge-b path{fill:#fff}
+.head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:2rem;align-items:end;margin-bottom:2.4rem}
+.head h2{font-size:clamp(1.6rem,3.2vw,2.4rem);font-weight:600;letter-spacing:-.025em;margin-top:.7rem}
+.head p{font-size:.94rem;color:var(--slate)}
+@media(max-width:820px){.head{grid-template-columns:1fr;gap:.8rem}}
+
+/* chips */
+.st{display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:500;padding:.26rem .68rem;border-radius:99px;white-space:nowrap}
+.st i{width:7px;height:7px;border-radius:50%}
+.st-ok{background:var(--green-soft);color:var(--navy)}.st-ok i{background:#1FB27A}
+.st-gap{background:var(--amber-soft);color:var(--amber-text)}.st-gap i{background:var(--amber)}
+.st-fu{background:var(--chip);color:var(--slate)}.st-fu i{background:#A79E90}
+.st-core{background:var(--red);color:#fff}.st-core i{background:#fff}
+.st-diff{background:#E8F3EC;color:var(--navy-deep)}.st-diff i{background:var(--navy)}
+.chk{font-size:.86rem;line-height:1.6;color:var(--amber-text);background:linear-gradient(90deg,var(--amber-soft),rgba(251,240,218,.25));padding:.8rem 1rem;border-radius:14px}
+.chk b{font-weight:600;margin-right:.45rem}
+
+/* 5 levels: sticky onion + scrolling cards */
+.lv-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:3rem;align-items:start}
+.onion-wrap{position:sticky;top:110px}
+.onion{max-width:440px;margin-inline:auto}
+.onion svg{width:100%;height:auto;display:block;overflow:visible}
+.onion .ring{cursor:pointer;transform-origin:220px 220px;transition:transform .5s var(--ease)}
+.onion .ring circle{transition:stroke .4s,stroke-width .3s,opacity .4s}
+.onion .ring.on circle{stroke:var(--red);stroke-width:3}
+.onion .ring.on{transform:scale(1.02)}
+.onion .ring:focus{outline:none}
+.onion .ring:focus-visible circle{stroke:var(--amber);stroke-width:4}
+.onion text{font-family:var(--f);font-size:14px;font-weight:600;text-anchor:middle;pointer-events:none}
+.onion-cap{text-align:center;font-size:.8rem;color:var(--slate);margin-top:.8rem}
+.lvs{display:grid;gap:1.1rem}
+.lv{position:relative;background:#fff;border-radius:var(--r);box-shadow:var(--sh-1);padding:1.4rem 1.5rem 1.3rem 1.5rem;transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.lv::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:4px;border-radius:0 4px 4px 0;background:var(--line);transition:background .4s}
+.lv.on{box-shadow:var(--sh-2);transform:translateX(-4px)}
+.lv.on::before{background:linear-gradient(180deg,var(--red),var(--amber))}
+.lv .top-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.lv .n{font-size:2.2rem;font-weight:700;line-height:.9;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1.4px rgba(12,114,66,.35);transition:color .4s,-webkit-text-stroke-color .4s}
+.lv.on .n{color:var(--red);-webkit-text-stroke-color:var(--red)}
+.lv h3{font-size:1.15rem;font-weight:600}
+.lv h3 small{font-weight:300;color:var(--slate);font-size:.82rem;margin-left:.35rem}
+.lv .st{margin-left:auto}
+.lv p.lead{font-size:.9rem;color:var(--slate);margin-top:.5rem}
+.lv ul{list-style:none;display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
+.lv li{font-size:.84rem;padding:.32rem .75rem;border-radius:99px;background:var(--paper-2)}
+.lv li.gap{background:var(--amber-soft);color:var(--amber-text);font-weight:500}
+.lv.core{background:linear-gradient(150deg,var(--navy),var(--navy-deep));color:#fff;overflow:hidden}
+.lv.core::after{content:"";position:absolute;right:-50px;top:-50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(217,164,65,.42),transparent 70%)}
+.lv.core p.lead{color:rgba(255,255,255,.78)}
+.lv.core h3 small{color:rgba(255,255,255,.65)}
+.lv.core li{background:rgba(255,255,255,.12)}
+.lv.core .n{-webkit-text-stroke-color:#F3D48E}
+.lv.core.on .n{color:#F3D48E;-webkit-text-stroke-color:#F3D48E}
+.lv.core::before{display:none}
+.lv.promise{background:linear-gradient(150deg,#fff,var(--amber-soft));box-shadow:0 0 0 2px rgba(175,9,9,.18),var(--sh-1)}
+.lv.promise::before{background:linear-gradient(180deg,var(--red),var(--amber))}
+.lv.promise .n{color:var(--red);-webkit-text-stroke-color:var(--red)}
+.pl{list-style:none;counter-reset:p;display:grid;gap:.5rem;margin-top:.8rem}
+.pl li{counter-increment:p;display:grid;grid-template-columns:auto 1fr;column-gap:.7rem;font-size:.84rem;color:var(--slate);background:rgba(255,255,255,.75);border-radius:12px;padding:.6rem .8rem}
+.pl li::before{content:counter(p,decimal-leading-zero);grid-row:span 2;font-weight:700;color:var(--red);font-size:1rem}
+.pl li b{color:var(--ink);font-size:.9rem}
+@media(max-width:900px){.lv-grid{grid-template-columns:1fr;gap:1.6rem}.onion-wrap{position:static}.onion{max-width:300px}}
+
+/* 4P × segment matrix */
+.lensbar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;margin-bottom:1.2rem;position:sticky;top:72px;z-index:20;padding:.45rem;border-radius:20px;background:rgba(255,255,255,.76);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);box-shadow:var(--sh-1);border:1px solid var(--line)}
+.seg{position:relative;display:flex;background:var(--chip);border-radius:15px;padding:4px;max-width:100%;overflow-x:auto}
+.seg button{position:relative;z-index:1;font-size:.82rem;font-weight:500;color:var(--slate);border:0;background:none;padding:.45rem .95rem;border-radius:11px;cursor:pointer;transition:color .3s;white-space:nowrap}
+.seg button[aria-pressed=true]{color:#fff}
+.seg .glide{position:absolute;top:4px;bottom:4px;left:0;border-radius:11px;background:var(--ink);transition:transform .45s var(--ease),width .45s var(--ease)}
+.seg.red .glide{background:var(--red)}
+.mx{display:grid;grid-template-columns:200px repeat(4,minmax(0,1fr));gap:10px}
+.mx .ch{font-size:.8rem;font-weight:600;padding:.6rem .9rem;border-radius:14px;background:var(--chip);color:var(--ink);transition:background .4s,color .4s,opacity .4s}
+.mx .ch small{display:block;font-weight:300;color:var(--slate);font-size:.74rem}
+.mx .ch.empty{background:none}
+.mx .ch.on{background:var(--red);color:#fff}
+.mx .ch.on small{color:rgba(255,255,255,.8)}
+.rh{padding:1rem 1rem 1rem 1.1rem;border-radius:var(--r);background:var(--tint);display:flex;flex-direction:column;gap:.35rem}
+.rh .code{font-size:.66rem;letter-spacing:.18em;font-weight:500;color:var(--amber-deep)}
+.rh h3{font-size:1.15rem;font-weight:600}
+.rh .ln{font-size:.8rem;line-height:1.5;color:var(--slate);transition:opacity .3s}
+.rh .ln b{display:block;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);font-weight:600}
+.cell{background:#fff;border-radius:var(--r);box-shadow:var(--sh-1);padding:1rem;display:flex;flex-direction:column;gap:.55rem;transition:opacity .45s var(--ease),transform .5s var(--ease),box-shadow .5s var(--ease),filter .45s}
+.cell .cl{display:none;font-size:.72rem;font-weight:600;color:var(--red)}
+.cell h4{font-size:.98rem;font-weight:600;line-height:1.35}
+.cell p{font-size:.84rem;line-height:1.55;color:var(--slate)}
+.cell .it{display:grid;gap:.12rem}
+.cell .it+.it{padding-top:.55rem;border-top:1px solid var(--line)}
+.cell .it b{font-size:.88rem;font-weight:500;color:var(--ink)}
+.cell.shared{background:var(--paper-2);box-shadow:none;border:1px dashed var(--line)}
+.cell.dim{opacity:.3;filter:saturate(.3)}
+.cell.hit{box-shadow:0 0 0 2px var(--red),var(--sh-2);transform:translateY(-2px)}
+.cell.prod h4{color:var(--red);font-size:1.08rem}
+@media(max-width:980px){
+  .mx{grid-template-columns:1fr;gap:8px}
+  .mx .ch{display:none}
+  .rh{margin-top:1.2rem}
+  .cell .cl{display:block}
+  .cell.off{display:none}
+}
+
+/* principles bento */
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1.1rem}
+.bx{background:#fff;border-radius:var(--r);box-shadow:var(--sh-1);padding:1.4rem;display:flex;flex-direction:column;gap:.7rem;transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.bx:hover{transform:translateY(-4px);box-shadow:var(--sh-2)}
+.bx .k{font-size:.66rem;letter-spacing:.16em;font-weight:500;color:var(--amber-deep);text-transform:uppercase}
+.bx h3{font-size:1.15rem;font-weight:600}
+.bx p{font-size:.88rem;color:var(--slate)}
+.b-eq{grid-column:span 6}
+.b-li{grid-column:span 3}
+.b-msg{grid-column:span 3}
+.eq{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center}
+.eq span{font-size:.92rem;padding:.5rem 1rem;border-radius:99px;background:var(--chip)}
+.eq i{font-style:normal;font-size:1.2rem;color:var(--slate);font-weight:200}
+.eq strong{font-size:.95rem;font-weight:600;padding:.55rem 1.1rem;border-radius:99px;background:var(--red);color:#fff;box-shadow:0 10px 24px -10px rgba(175,9,9,.7)}
+.lia{display:grid;gap:.6rem}
+.lia div{display:grid;grid-template-columns:auto 1fr;gap:.8rem;align-items:center;padding:.75rem .9rem;border-radius:14px;background:var(--paper-2)}
+.lia svg{width:20px;height:20px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.lia .a svg{stroke:var(--amber-deep)}.lia .b svg{stroke:var(--red)}
+.lia p{font-size:.86rem;color:var(--ink);line-height:1.45}
+.lia p b{display:block;font-weight:600}
+.msgs{display:grid;gap:.5rem}
+.msgs span{display:flex;align-items:center;gap:.6rem;font-size:1rem;font-weight:500;padding:.65rem .9rem;border-radius:14px;background:var(--paper-2)}
+.msgs span::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--red);flex:none}
+.evan{font-size:.84rem;color:var(--navy);background:var(--green-soft);padding:.7rem .9rem;border-radius:12px;margin-top:auto}
+@media(max-width:820px){.b-li,.b-msg{grid-column:span 6}}
+
+/* trip route (3P process) */
+.route{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-top:.4rem}
+.route::before{content:"";position:absolute;left:6%;right:6%;top:27px;height:4px;border-radius:4px;background:repeating-linear-gradient(90deg,var(--amber) 0 18px,transparent 18px 30px)}
+.stop{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:.6rem}
+.stop .pin{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#fff;box-shadow:var(--sh-2);position:relative;z-index:1}
+.stop .pin svg{width:24px;height:24px;fill:none;stroke:var(--navy);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.stop.cam .pin{background:var(--red)}.stop.cam .pin svg{stroke:#fff}
+.stop b{font-size:.95rem;font-weight:600}
+.stop p{font-size:.82rem;color:var(--slate);max-width:15rem}
+.end-l,.end-r{position:absolute;top:-30px;font-size:.72rem;font-weight:500;color:var(--slate)}
+.end-l{left:0}.end-r{right:0}
+.p3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.1rem;margin-top:2.6rem}
+.p3 .bx h3{font-size:1.05rem}
+.p3 ul,.p3 ol{display:grid;gap:.4rem;padding-left:1.1rem}
+.p3 li{font-size:.88rem;line-height:1.5}
+.p3 ol li::marker{color:var(--red);font-weight:600}
+@media(max-width:820px){
+  .route{grid-template-columns:1fr;gap:1.3rem;padding-left:.2rem}
+  .route::before{left:27px;right:auto;top:10px;bottom:10px;width:4px;height:auto;background:repeating-linear-gradient(180deg,var(--amber) 0 18px,transparent 18px 30px)}
+  .stop{flex-direction:row;text-align:left;align-items:center;gap:1rem}
+  .stop .pin{flex:none}
+  .stop div{display:grid}
+  .end-l,.end-r{display:none}
+  .p3{grid-template-columns:1fr}
+}
+
+/* gaps + checklist */
+.gap-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:1.6rem;align-items:start}
+.gapc{display:grid;gap:1rem}
+.gp{background:#fff;border-radius:var(--r);box-shadow:var(--sh-1);padding:1.2rem 1.3rem;display:grid;gap:.4rem;border-left:4px solid var(--amber)}
+.gp h4{font-size:1rem;font-weight:600}
+.gp p{font-size:.86rem;color:var(--slate)}
+.ckbox{background:#fff;border-radius:var(--r-lg);box-shadow:var(--sh-2);overflow:hidden}
+.ck-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 1.3rem;background:linear-gradient(150deg,var(--navy),var(--navy-deep));color:#fff}
+.ck-head h3{font-size:1rem;font-weight:600}
+.ck-head .cnt{font-size:1.6rem;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.ck-head .cnt span{font-size:.85rem;font-weight:300;opacity:.75}
+.bar{height:5px;background:var(--chip)}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--amber),var(--sky));transition:width .6s var(--ease)}
+.ck{display:grid;grid-template-columns:auto 130px 1fr;gap:.9rem;align-items:flex-start;padding:.85rem 1.3rem;cursor:pointer;transition:background .3s}
+.ck+.ck{border-top:1px solid var(--line)}
+.ck:hover{background:var(--paper-2)}
+.ck input{appearance:none;-webkit-appearance:none;width:22px;height:22px;border-radius:7px;border:2px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;transition:.3s var(--ease);margin-top:.15rem}
+.ck input::after{content:"";width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) scale(0);transition:transform .3s var(--ease);margin-top:-3px}
+.ck input:checked{background:var(--navy);border-color:var(--navy)}
+.ck input:checked::after{transform:rotate(-45deg) scale(1)}
+.ck .own{font-size:.82rem;font-weight:600;color:var(--navy)}
+.ck .txt{font-size:.9rem;line-height:1.55}
+.ck input:checked~.txt{color:var(--slate);text-decoration:line-through;text-decoration-color:rgba(110,101,90,.5)}
+.ck-foot{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.8rem 1.3rem;background:var(--paper-2);font-size:.8rem;color:var(--slate)}
+.ck-foot button{font-size:.78rem;font-weight:500;border:1px solid var(--line);background:#fff;border-radius:99px;padding:.35rem .9rem;cursor:pointer}
+@media(max-width:900px){.gap-grid{grid-template-columns:1fr}.ck{grid-template-columns:auto 1fr}.ck .own,.ck .txt{grid-column:2}}
+
+/* footer */
+.foot{position:relative;background:var(--paper-2);color:var(--slate);padding:3rem 0 2.6rem;font-size:.84rem;line-height:1.8;border-top:1px solid var(--line);margin-top:3rem}
+.foot::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--red) 0 33.3%,var(--amber) 33.3% 66.6%,var(--navy) 66.6% 100%)}
+.foot .mark{margin-bottom:1rem}
+.foot p{max-width:62rem}
+.foot p+p{margin-top:.6rem}
+.foot b{color:var(--ink);font-weight:500}
+
+/* motion: visible at rest; only blocks below the first screen get .pre */
+.rv{transition:opacity .9s var(--ease) var(--d,0ms),transform .9s var(--ease) var(--d,0ms)}
+.rv.pre{opacity:0;transform:translateY(26px)}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.rv.pre{opacity:1;transform:none}}
+@media print{.top,.lensbar{display:none}.rv.pre{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#home"><i></i> 4P และ 5 Product Levels <em>METRANS · เอกสารภายใน</em></a>
+    <nav aria-label="ส่วนของหน้า">
+      <a href="#levels">5 ระดับ</a>
+      <a href="#matrix">4P × กลุ่ม</a>
+      <a href="#principles">หลักคิด</a>
+      <a href="#trip">3P</a>
+      <a href="#gaps">ต้องปิดก่อน</a>
+    </nav>
+  </div>
+  <span class="prog" id="prog"></span>
+</header>
+
+<section class="hero" id="home">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow th rv">Core benefit · หัวใจของทุกข้อความ</span>
+      <h1 class="rv" style="--d:100ms">ลูกค้าซื้อผลลัพธ์<em>ของถึงคลังปลายทาง ครบ ตรงเวลา สภาพดี</em></h1>
+      <p class="sub rv" style="--d:200ms">วิเคราะห์ 5 Product Levels และ 4P ของบริการรถตู้ทึบ METRANS จากกลุ่มเป้าหมายใน 6W1H ยังไม่ผูกกับลูกค้ารายใด</p>
+      <div class="scope rv" style="--d:300ms"><span>รถตู้ทึบพร้อมคนขับ 6 · 10 · 14 · 18 ล้อ</span><span>คลังต้นทาง → คลังปลายทาง</span><span>ภาคกลาง → ภาคใต้</span><span>สินค้าที่ขายใน modern trade</span><span class="no">ไม่ส่งเข้าหน้าร้านหรือสาขา</span></div>
+    </div>
+    <aside class="picker rv" style="--d:250ms" aria-label="เลือกกลุ่มเป้าหมาย">
+      <h2>อ่านในมุมของกลุ่มไหน</h2>
+      <p class="hint">เลือกแล้ว ตาราง 4P จะเน้นสิ่งที่กลุ่มนั้นได้</p>
+      <div class="pk" id="picker">
+        <button type="button" data-v="ก" aria-pressed="false"><b>ก</b><span>แบรนด์ SME<small>ของไม่เต็มคัน อยากจ่ายเท่าที่ใช้</small></span></button>
+        <button type="button" data-v="ข" aria-pressed="false"><b>ข</b><span>ผู้ผลิตรายกลางถึงใหญ่<small>รถประจำไม่พอช่วงพีค ต้องผ่านเกณฑ์ผู้ขาย</small></span></button>
+        <button type="button" data-v="ค" aria-pressed="false"><b>ค</b><span>ผู้แทนจำหน่าย<small>รับของเป็นรอบ อยากได้รอบแน่นอน ราคานิ่ง</small></span></button>
+        <button type="button" data-v="all" class="all" aria-pressed="true">ดูทุกกลุ่มพร้อมกัน</button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="band tint" id="levels">
+  <svg class="edge-t" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 L1440,0 L1440,16 C1000,60 480,0 0,34 Z"/></svg>
+  <div class="wrap">
+    <div class="head rv">
+      <div><span class="eyebrow">5 Product Levels</span><h2>จากสิ่งที่ลูกค้าซื้อจริง ถึงสิ่งที่ทำได้ในอนาคต</h2></div>
+      <p>เลื่อนอ่านทีละระดับ วงด้านซ้ายจะไฮไลต์ตาม กดที่วงเพื่อข้ามไปยังระดับนั้น</p>
+    </div>
+    <div class="lv-grid">
+      <div class="onion-wrap rv">
+        <div class="onion">
+          <svg viewBox="0 0 440 440" role="group" aria-label="วงซ้อน 5 ระดับของสินค้า">
+            <g class="ring" data-lv="5" tabindex="0" role="button" aria-label="ไปที่ระดับ 5 Potential"><circle cx="220" cy="220" r="218" fill="#FFFFFF" stroke="#E6DDCE" stroke-width="2"/></g>
+            <g class="ring" data-lv="4" tabindex="0" role="button" aria-label="ไปที่ระดับ 4 Augmented"><circle cx="220" cy="220" r="176" fill="#EEF6F0" stroke="#D3E8DB" stroke-width="2"/></g>
+            <g class="ring" data-lv="3" tabindex="0" role="button" aria-label="ไปที่ระดับ 3 Expected"><circle cx="220" cy="220" r="134" fill="#FBF0DA" stroke="#EBD6A8" stroke-width="2"/></g>
+            <g class="ring" data-lv="2" tabindex="0" role="button" aria-label="ไปที่ระดับ 2 Generic"><circle cx="220" cy="220" r="92" fill="#CFE7DA" stroke="#B9DCC7" stroke-width="2"/></g>
+            <g class="ring" data-lv="1" tabindex="0" role="button" aria-label="ไปที่ระดับ 1 Core"><circle cx="220" cy="220" r="48" fill="#AF0909" stroke="#AF0909" stroke-width="2"/></g>
+            <text x="220" y="26" fill="#6E655A">Potential</text>
+            <text x="220" y="68" fill="#08502F">Augmented</text>
+            <text x="220" y="110" fill="#8A5F12">Expected</text>
+            <text x="220" y="152" fill="#08502F">Generic</text>
+            <text x="220" y="225" fill="#FFFFFF" style="font-size:15px">Core</text>
+          </svg>
+        </div>
+        <p class="onion-cap">วงในคือสิ่งที่ต้องมี วงนอกคือสิ่งที่ทำให้ต่าง</p>
+      </div>
+      <div class="lvs">
+        <article class="lv core rv" id="lv1" data-lv="1"><div class="top-row"><span class="n">01</span><h3>Core benefit<small>ประโยชน์หลัก</small></h3><span class="st st-core"><i></i>หัวใจ</span></div>
+          <p class="lead">ลูกค้าไม่ได้ซื้อรถบรรทุก ลูกค้าซื้อผลลัพธ์ที่คลังปลายทาง</p>
+          <ul><li>ของถึงครบ</li><li>ตรงเวลา ทันคิวคลัง</li><li>สภาพดี</li><li>ไม่ขาดสต็อก</li></ul></article>
+        <article class="lv rv" id="lv2" data-lv="2"><div class="top-row"><span class="n">02</span><h3>Generic<small>สินค้าพื้นฐาน</small></h3><span class="st st-ok"><i></i>มีแล้ว</span></div>
+          <p class="lead">สิ่งที่ผู้ขนส่งทุกรายต้องมี เรามีครบ แต่ไม่ใช่จุดขาย</p>
+          <ul><li>รถตู้ทึบพร้อมคนขับ 6/10/14/18 ล้อ</li><li>14 และ 18 ล้อเป็นรถพ่วงแม่ลูก</li><li>คลังต้นทางถึงคลังปลายทาง</li><li>ฐานรถสมุทรปราการ</li></ul></article>
+        <article class="lv rv" id="lv3" data-lv="3"><div class="top-row"><span class="n">03</span><h3>Expected<small>สิ่งที่ลูกค้าคาดหวัง</small></h3><span class="st st-gap"><i></i>ช่องว่าง 2 ข้อ</span></div>
+          <p class="lead">ขนส่งทุกรายต้องมี ลูกค้าถือเป็นของพื้นฐาน ไม่ใช่จุดขาย ข้อสีทองต้องปิดก่อนออกสื่อ</p>
+          <ul><li>รับของตามนัด</li><li>ถึงทันคิวคลัง</li><li>ของครบ เอกสารครบ</li><li>ติดต่อได้ ราคาชัด</li><li>GPS ติดตามรถ (กฎหมายบังคับรถ 10 ล้อขึ้นไป)</li><li class="gap">ตอบใบเสนอราคาเร็ว</li><li class="gap">ประกันสินค้า</li></ul></article>
+        <article class="lv rv" id="lv4" data-lv="4"><div class="top-row"><span class="n">04</span><h3>Augmented<small>สิ่งที่ให้มากกว่า</small></h3><span class="st st-gap"><i></i>ต้องเทียบคู่แข่ง</span></div>
+          <p class="lead">จุดต่างที่เป็นไปได้ ต้องเทียบคู่แข่งเส้นกลาง-ใต้ก่อน จึงจะรู้ว่าข้อไหนต่างจริง</p>
+          <ul><li>จองตู้เดียว แยกตู้หนักและเบา</li><li>กติกาความรับผิดชอบจากรูปตอนขึ้นและลง</li><li>ขากลับช่วยลดราคาขาไป</li><li>ท้ายลิฟต์ (เฉพาะตู้แม่)</li><li>กล้องในรถ คุยกับคนขับได้</li><li class="gap">Q Mark และ ISO 9001 [อาจเป็นมาตรฐานทั่วไป]</li><li class="gap">รถคันอื่นรับต่อ [รอยืนยัน]</li></ul></article>
+        <article class="lv rv" id="lv5" data-lv="5"><div class="top-row"><span class="n">05</span><h3>Potential<small>สิ่งที่ทำได้ในอนาคต</small></h3><span class="st st-fu"><i></i>อนาคต</span></div>
+          <p class="lead">ยังไม่ใช้ในสื่อถึงลูกค้า เก็บเป็นแผนพัฒนา</p>
+          <ul><li>ลูกค้าดูสถานะและรูปได้เอง</li><li>ETA แม่นขึ้น</li><li>รายงานความตรงเวลารายเดือน</li><li>วางแผนหลายจุดส่ง</li><li>จับคู่งานขากลับอย่างเป็นระบบ</li><li>รถประเภทอื่นเพิ่ม</li></ul></article>
+        <article class="lv promise rv"><div class="top-row"><span class="n">+</span><h3>จุดต่างที่สร้างได้<small>ข้อเสนอ</small></h3><span class="st st-core"><i></i>สัญญาให้วัดได้</span></div>
+          <p class="lead">ขนส่งส่วนใหญ่ทำเรื่องพื้นฐานอยู่แล้ว แต่ไม่มีใครสัญญาเป็นตัวเลข การสัญญาได้คือจุดที่ทำให้เราต่าง</p>
+          <ol class="pl"><li><b>ตอบใบเสนอราคาภายในเวลาที่กำหนด</b>เปลี่ยนช่องว่างใน Expected ให้เป็นคำสัญญา [รอกำหนดชั่วโมง]</li><li><b>ส่งรูปตอนขึ้นและลงทุกเที่ยว โดยลูกค้าไม่ต้องขอ</b>ทำให้กติกาความรับผิดชอบเห็นได้จริง</li><li><b>รายงานความตรงเวลาทุกเดือน</b>ย้ายจาก Potential มาเป็นคำสัญญา [รอยืนยันว่าเก็บข้อมูลได้]</li></ol></article>
+        <p class="chk rv"><b>ควรตรวจ</b>GPS เป็นข้อบังคับ ใช้ดูภายในเท่านั้น ไม่เปิดให้ลูกค้า · การจับคู่งานขากลับและระบบติดตามเป็นงานของ SmartBackhaul ใช้ในเอกสารภายในเท่านั้น</p>
+      </div>
+    </div>
+  </div>
+  <svg class="edge-b" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,34 C480,0 960,60 1440,24 L1440,60 L0,60 Z"/></svg>
+</section>
+
+<section class="band" id="matrix">
+  <div class="wrap">
+    <div class="head rv">
+      <div><span class="eyebrow">Marketing Mix</span><h2>4P × กลุ่มเป้าหมาย: แต่ละกลุ่มได้อะไร</h2></div>
+      <p>อ่านตามแถวเพื่อดูแต่ละ P อ่านตามคอลัมน์เพื่อดูข้อเสนอทั้งชุดของกลุ่มนั้น คอลัมน์ขวาสุดคือสิ่งที่ใช้กับทุกกลุ่ม</p>
+    </div>
+    <div class="lensbar">
+      <div class="seg red" id="fSeg" role="group" aria-label="กลุ่มเป้าหมาย"><span class="glide"></span>
+        <button type="button" data-v="all" aria-pressed="true">ทุกกลุ่ม</button><button type="button" data-v="ก" aria-pressed="false">ก · SME</button><button type="button" data-v="ข" aria-pressed="false">ข · ผู้ผลิต</button><button type="button" data-v="ค" aria-pressed="false">ค · ผู้แทน</button></div>
+      <div class="seg" id="fLens" role="group" aria-label="มุมมอง"><span class="glide"></span>
+        <button type="button" data-v="p" aria-pressed="true">4P เรา</button><button type="button" data-v="c" aria-pressed="false">4C ลูกค้า</button><button type="button" data-v="e" aria-pressed="false">4E ความสัมพันธ์</button></div>
+    </div>
+
+    <div class="mx rv" id="mx">
+      <div class="ch empty"></div>
+      <div class="ch" data-col="ก">ก · แบรนด์ SME<small>ของไม่เต็มคัน</small></div>
+      <div class="ch" data-col="ข">ข · ผู้ผลิต<small>รถไม่พอช่วงพีค</small></div>
+      <div class="ch" data-col="ค">ค · ผู้แทนจำหน่าย<small>รับของเป็นรอบ</small></div>
+      <div class="ch" data-col="all">ทุกกลุ่ม<small>ใช้ร่วมกัน</small></div>
+
+      <div class="rh"><span class="code">01 · PRODUCT</span><h3 data-p="Product" data-c="Customer value" data-e="Experience">Product</h3>
+        <p class="ln" data-p="แพ็กเกจที่ตรงกับแต่ละกลุ่ม" data-c="ของถึงครบ ไม่ขาดสต็อก ไม่ต้องตามรถ" data-e="ได้รูปทุกเที่ยว รู้ทันทีว่าใครรับผิดชอบ">แพ็กเกจที่ตรงกับแต่ละกลุ่ม</p></div>
+      <div class="cell prod" data-col="ก"><span class="cl">กลุ่ม ก · แบรนด์ SME</span><h4>จองตู้เดียว</h4><p>1 ตู้ ของหนักหรือของเบา เราหาของมาเติมอีกตู้ ส่งของไม่เต็มคันได้โดยไม่ต้องเหมาทั้งคัน</p></div>
+      <div class="cell prod" data-col="ข"><span class="cl">กลุ่ม ข · ผู้ผลิต</span><h4>รถเสริมช่วงพีค</h4><p>รถเรียกได้เมื่อผู้ขนส่งประจำไม่พอ พร้อมเอกสารผู้ขายและใบรับรอง ไม่เสี่ยง KPI</p></div>
+      <div class="cell prod" data-col="ค"><span class="cl">กลุ่ม ค · ผู้แทนจำหน่าย</span><h4>สายประจำ</h4><p>รอบวิ่งตามตาราง ราคาตกลงล่วงหน้า แยกตู้ของหนักและของเบา วางแผนสต็อกได้แน่นอน</p></div>
+      <div class="cell shared" data-col="all"><span class="cl">ทุกกลุ่ม</span><div class="it"><b>รูปตอนขึ้นและลงทุกเที่ยว</b><p>ไม่ต้องตามรถ</p></div><div class="it"><b>ของหนักและเบาแยกตู้</b><p>เพราะคิดราคาต่างกัน</p></div></div>
+
+      <div class="rh"><span class="code">02 · PRICE</span><h3 data-p="Price" data-c="Cost" data-e="Exchange">Price</h3>
+        <p class="ln" data-p="ตั้งราคาจากคุณค่า ไม่ใช่ราคาต่ำสุด" data-c="ต้นทุนรวมที่ลูกค้าคิดจริง ไม่ใช่แค่ค่าขนส่ง" data-e="มีของขากลับ ราคาขาไปลดลง">ตั้งราคาจากคุณค่า ไม่ใช่ราคาต่ำสุด</p></div>
+      <div class="cell" data-col="ก"><span class="cl">กลุ่ม ก · แบรนด์ SME</span><div class="it"><b>ราคาต่อตู้</b><p>หนักและเบาคนละราคา <span class="ph">[รอกำหนด]</span></p></div><div class="it"><b>ปริมาณมากขึ้น ราคาดีขึ้น</b><p>ตู้เดียวถึงเต็มคัน <span class="ph">[รอกำหนดขั้น]</span></p></div><div class="it"><b>ราคาทดลองเที่ยวแรก</b><p><span class="ph">[รออนุมัติ]</span></p></div></div>
+      <div class="cell" data-col="ข"><span class="cl">กลุ่ม ข · ผู้ผลิต</span><div class="it"><b>ราคารถเสริมรายเที่ยว</b><p>ตามประเภทรถ <span class="ph">[รอกำหนด]</span></p></div></div>
+      <div class="cell" data-col="ค"><span class="cl">กลุ่ม ค · ผู้แทนจำหน่าย</span><div class="it"><b>ราคาสายประจำ</b><p>คิดตามเที่ยวที่ใช้จริง ไม่บังคับไป-กลับ ตกลงตามสัญญา</p></div><div class="it"><b>สูตรน้ำมันในสัญญา</b><p><span class="ph">[ฝ่ายบัญชีกำหนด]</span></p></div><div class="it"><b>ราคาทดลองเที่ยวแรก</b><p><span class="ph">[รออนุมัติ]</span></p></div></div>
+      <div class="cell shared" data-col="all"><span class="cl">ทุกกลุ่ม</span><div class="it"><b>มีของขากลับ ราคาขาไปลดลง</b><p>Exchange ใน 4E</p></div><div class="it"><b>ทบทวนทุกรอบสัญญา</b><p><span class="ph">[รอกำหนด]</span></p></div><div class="it"><b>งานที่ผู้ว่าจ้างกำหนดราคา</b><p>ตัดสินจากต้นทุนต่อเที่ยว</p></div></div>
+
+      <div class="rh"><span class="code">03 · PLACE</span><h3 data-p="Place" data-c="Convenience" data-e="Everywhere">Place</h3>
+        <p class="ln" data-p="ช่องทางขาย และเส้นทางที่วิ่ง" data-c="ติดต่อช่องทางไหนก็ได้ข้อมูลและราคาเดียวกัน ตอบในเวลาที่กำหนด" data-e="อยู่ในที่ที่ลูกค้าหาผู้ขนส่งอยู่แล้ว ไม่เปิดทุกช่องทางพร้อมกัน">ช่องทางขาย และเส้นทางที่วิ่ง</p></div>
+      <div class="cell" data-col="ก"><span class="cl">กลุ่ม ก · แบรนด์ SME</span><div class="it"><b>Facebook เพจ / กลุ่ม</b><p>คอนเทนต์ และหาลูกค้าใหม่ <span class="st st-diff"><i></i>เริ่มทำ</span></p></div></div>
+      <div class="cell" data-col="ข"><span class="cl">กลุ่ม ข · ผู้ผลิต</span><div class="it"><b>ขายตรง / โทรหา</b><p><span class="st st-ok"><i></i>ทำอยู่</span></p></div><div class="it"><b>เว็บไซต์</b><p>ใช้ตรวจบริษัทและใบรับรอง <span class="ph">[รอยืนยัน]</span></p></div><div class="it"><b>งานแสดงสินค้า</b><p><span class="st st-fu"><i></i>ยังไม่ทำ</span></p></div></div>
+      <div class="cell" data-col="ค"><span class="cl">กลุ่ม ค · ผู้แทนจำหน่าย</span><div class="it"><b>ขายตรง / โทรหา</b><p>จากรายชื่อคลังภาคใต้และผู้ผลิตต้นทาง <span class="st st-ok"><i></i>ทำอยู่</span></p></div></div>
+      <div class="cell shared" data-col="all"><span class="cl">ทุกกลุ่ม</span><div class="it"><b>คนรู้จักแนะนำ</b><p>แหล่งงานหลักตอนนี้</p></div><div class="it"><b>LINE</b><p>ใบเสนอราคา และรูปทุกเที่ยว · บัญชีกลาง <span class="ph">[รอยืนยัน]</span></p></div><div class="it"><b>เส้นทาง</b><p>ฐานสมุทรปราการ → คลังภาคกลาง → สุราษฎร์ธานี หาดใหญ่ ภูเก็ต และใกล้เคียง <span class="ph">[รอยืนยัน]</span></p></div></div>
+
+      <div class="rh"><span class="code">04 · PROMOTION</span><h3 data-p="Promotion" data-c="Communication" data-e="Evangelism">Promotion</h3>
+        <p class="ln" data-p="ทำอะไร กับใคร เมื่อไร" data-c="พูดเรื่องที่ลูกค้ากังวล" data-e="ลูกค้าเดิมช่วยบอกต่อ ด้วยผลงานจริง">ทำอะไร กับใคร เมื่อไร</p></div>
+      <div class="cell" data-col="ก"><span class="cl">กลุ่ม ก · แบรนด์ SME</span><div class="it"><b>Sales Promotion</b><p>ราคาทดลองเที่ยวแรกและราคาตู้เดียว ช่วงเปิดเส้นทางใหม่หรือรถขาลงว่าง</p></div><div class="it"><b>Advertising</b><p>คอนเทนต์ตามหมวดสินค้า ทุกสัปดาห์ <span class="ph">[รอกำหนดความถี่]</span></p></div></div>
+      <div class="cell" data-col="ข"><span class="cl">กลุ่ม ข · ผู้ผลิต</span><div class="it"><b>Event Marketing</b><p>งานแสดงสินค้าโลจิสติกส์ และเยี่ยมลูกค้า <span class="ph">[รอเลือกงาน]</span></p></div><div class="it"><b>Direct Marketing</b><p>ก่อนช่วงพีค และเมื่อมีรถว่างจริง</p></div></div>
+      <div class="cell" data-col="ค"><span class="cl">กลุ่ม ค · ผู้แทนจำหน่าย</span><div class="it"><b>Sales Promotion</b><p>ราคาทดลองเที่ยวแรก เมื่อเปิดเส้นทางใหม่</p></div><div class="it"><b>Direct Marketing</b><p>โทร · LINE · อีเมล ก่อนช่วงพีค</p></div></div>
+      <div class="cell shared" data-col="all"><span class="cl">ทุกกลุ่ม</span><div class="it"><b>PR / Branding</b><p>Q Mark · ISO 9001 · รูปหลักฐาน เริ่มที่เพจ Facebook ก่อนเริ่มยิงโฆษณา</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="band tint" id="principles">
+  <svg class="edge-t" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 L1440,0 L1440,16 C1000,60 480,0 0,34 Z"/></svg>
+  <div class="wrap">
+    <div class="head rv">
+      <div><span class="eyebrow th">หลักคิดที่ใช้กับทุก P</span><h2>3 เรื่องที่ทุกคนในทีมพูดเหมือนกัน</h2></div>
+      <p>ใช้เป็นแกนเวลาคุยกับลูกค้า เขียนคอนเทนต์ หรือทำใบเสนอราคา</p>
+    </div>
+    <div class="bento">
+      <article class="bx b-eq rv"><span class="k">Price · Cost</span><h3>ค่าขนส่งถูกที่สุด ไม่ได้แปลว่าต้นทุนรวมต่ำที่สุด</h3>
+        <div class="eq"><span>ค่าขนส่ง</span><i>+</i><span>ของเสียหาย</span><i>+</i><span>ตกคิวคลัง</span><i>+</i><span>ค่าขากลับที่ไม่ได้ใช้</span><i>=</i><strong>ต้นทุนที่ลูกค้าคิดจริง</strong></div></article>
+      <article class="bx b-li rv"><span class="k">Product · Experience</span><h3>รู้ชัดว่าใครรับผิดชอบ</h3>
+        <div class="lia">
+          <div class="a"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.2"/><path d="M8 6l1.5-2h5L16 6"/></svg><p><b>ถ่ายรูปก่อนขึ้น เจอความเสียหาย</b>คลังต้นทางรับผิดชอบ</p></div>
+          <div class="b"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/><path d="M9 12h6"/></svg><p><b>ขึ้นของแล้ว ไปเจอตอนลง</b>METRANS รับผิดชอบ</p></div>
+        </div></article>
+      <article class="bx b-msg rv" style="--d:80ms"><span class="k">Promotion · Communication</span><h3>สารหลักที่พูดซ้ำทุกช่องทาง</h3>
+        <div class="msgs"><span>ของไม่เต็มคันก็ส่งได้</span><span>รู้ชัดว่าใครรับผิดชอบ</span><span>รถไม่ทิ้งงาน</span></div>
+        <p class="evan"><b>Evangelism</b> งานส่วนใหญ่มาจากการบอกต่อ เก็บรูปและเวลาถึงไว้ ขออนุญาตลูกค้าก่อนใช้เป็นกรณีศึกษา</p></article>
+    </div>
+  </div>
+  <svg class="edge-b" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,34 C480,0 960,60 1440,24 L1440,60 L0,60 Z"/></svg>
+</section>
+
+<section class="band" id="trip">
+  <div class="wrap">
+    <div class="head rv">
+      <div><span class="eyebrow th">ข้อเสนอเพิ่มเติม · 3P</span><h2>หนึ่งเที่ยวที่ลูกค้าเห็น</h2></div>
+      <p>บริการขนส่งจับต้องไม่ได้ ลูกค้าตัดสินจากขั้นตอน คน และหลักฐาน ทั้งหมดนี้เป็นข้อเสนอ ใช้ตามที่ทีมเห็นสมควร</p>
+    </div>
+    <div class="route rv" style="margin-top:2.6rem">
+      <span class="end-l">คลังต้นทาง · ภาคกลาง</span><span class="end-r">คลังปลายทาง · ภาคใต้</span>
+      <div class="stop cam"><span class="pin"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.2"/><path d="M8 6l1.5-2h5L16 6"/></svg></span><div><b>ตรวจและถ่ายรูปตอนขึ้น</b><p>หลักฐานชิ้นแรก แบ่งความรับผิดชอบ</p></div></div>
+      <div class="stop"><span class="pin"><svg viewBox="0 0 24 24"><path d="M12 21s-6-5.3-6-10a6 6 0 0 1 12 0c0 4.7-6 10-6 10z"/><circle cx="12" cy="11" r="2.3"/></svg></span><div><b>ดูรถระหว่างทาง</b><p>ทีมจัดรถติดตามภายใน</p></div></div>
+      <div class="stop"><span class="pin"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="13" height="10" rx="1.5"/><path d="M15 10h4l3 3v4h-7"/><circle cx="6.5" cy="18" r="1.6"/><circle cx="18" cy="18" r="1.6"/></svg></span><div><b>รถมีปัญหา มีคันอื่นรับต่อ</b><p><span class="ph">[รอยืนยัน]</span></p></div></div>
+      <div class="stop cam"><span class="pin"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.2"/><path d="M8 6l1.5-2h5L16 6"/></svg></span><div><b>ถ่ายรูปตอนลง</b><p>ส่งรูปให้ลูกค้าทาง LINE</p></div></div>
+    </div>
+    <div class="p3">
+      <article class="bx rv"><span class="k">People</span><h3>คนที่ลูกค้าต้องเชื่อใจ</h3><ul><li>คนขับผ่านเกณฑ์ Q Mark</li><li>ทีมจัดรถดูรถตลอดเส้นทาง</li><li>ฝ่ายขายตอบใบเสนอราคาตรงเวลา</li></ul></article>
+      <article class="bx rv" style="--d:80ms"><span class="k">Process</span><h3>ทำครบทุกงาน</h3><ol><li>เปิด sale order</li><li>ยืนยันงาน</li><li>เปิด job</li><li>ติดตาม และปิดงาน</li><li>ประเมินผล</li></ol></article>
+      <article class="bx rv" style="--d:160ms"><span class="k">Physical evidence</span><h3>หลักฐานที่จับต้องได้</h3><ul><li>รูปที่ต้นทางและปลายทาง</li><li>ใบรับรอง Q Mark และ ISO 9001</li><li>สภาพรถและตู้</li><li>เอกสารส่งมอบ</li></ul></article>
+    </div>
+  </div>
+</section>
+
+<section class="band tint" id="gaps">
+  <svg class="edge-t" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 L1440,0 L1440,16 C1000,60 480,0 0,34 Z"/></svg>
+  <div class="wrap">
+    <div class="head rv">
+      <div><span class="eyebrow th">ต้องปิดก่อนออกสื่อ</span><h2>ช่องว่างและสิ่งที่ต้องยืนยัน</h2></div>
+      <p>ติ๊กเมื่อได้คำตอบแล้ว การติ๊กจำไว้ในเบราว์เซอร์ของคุณเท่านั้น คนอื่นที่เปิดลิงก์จะไม่เห็น</p>
+    </div>
+    <div class="gap-grid">
+      <div class="gapc">
+        <div class="gp rv"><span class="st st-gap" style="justify-self:start"><i></i>Expected</span><h4>ตอบใบเสนอราคาเร็ว</h4><p>ใบเสนอราคาเคยไปไม่ถึงลูกค้า ต้องมีเจ้าของงานและเวลาตอบ <span class="ph">[รอกำหนด]</span> ก่อนเปิดช่องทางใหม่</p></div>
+        <div class="gp rv" style="--d:80ms"><span class="st st-gap" style="justify-self:start"><i></i>Expected</span><h4>ประกันสินค้า</h4><p>ลูกค้าถามเป็นเรื่องพื้นฐาน ต้องรู้วงเงินรับผิดชอบต่อเที่ยว</p></div>
+        <div class="gp rv" style="--d:160ms"><span class="st st-gap" style="justify-self:start"><i></i>Augmented</span><h4>รถคันอื่นรับต่อ</h4><p>ยังไม่ยืนยัน ห้ามใช้ในสื่อจนกว่าฝ่ายจัดรถยืนยัน</p></div>
+      </div>
+      <div class="ckbox rv" style="--d:120ms">
+        <div class="ck-head"><h3>เช็กลิสต์ตามผู้รับผิดชอบ</h3><div class="cnt"><b id="ckN">0</b><span> / 6</span></div></div>
+        <div class="bar"><i id="ckBar"></i></div>
+        <div id="cklist">
+          <label class="ck"><input type="checkbox" id="ck1"><span class="own">ฝ่ายจัดรถ</span><span class="txt">มีรถสำรองเส้นภาคใต้จริงไหม และส่งรถลงใต้ได้กี่คันต่อสัปดาห์</span></label>
+          <label class="ck"><input type="checkbox" id="ck2"><span class="own">ฝ่ายบัญชี</span><span class="txt">เกณฑ์และราคาของหนักกับของเบา · ราคาตู้เดียว · สูตรน้ำมัน · ราคาทดลองเที่ยวแรก</span></label>
+          <label class="ck"><input type="checkbox" id="ck3"><span class="own">บัญชี / บริหาร</span><span class="txt">วงเงินรับผิดชอบ หรือประกันสินค้าต่อเที่ยว</span></label>
+          <label class="ck"><input type="checkbox" id="ck4"><span class="own">ขาย และ ops</span><span class="txt">เจ้าของงานและเวลาตอบใบเสนอราคา</span></label>
+          <label class="ck"><input type="checkbox" id="ck5"><span class="own">การตลาด</span><span class="txt">สถานะเว็บไซต์ บัญชี LINE กลาง และเพจ Facebook</span></label>
+          <label class="ck"><input type="checkbox" id="ck6"><span class="own">ทุกฝ่าย</span><span class="txt">เทียบคู่แข่งเส้นกลาง-ใต้อย่างน้อย 2-3 ราย ในทุก P โดยเฉพาะข้อใน Augmented</span></label>
+        </div>
+        <div class="ck-foot"><span id="ckMsg">ยังไม่มีเรื่องที่ยืนยัน</span><button type="button" id="ckReset">ล้างการติ๊ก</button></div>
+      </div>
+    </div>
+  </div>
+  <svg class="edge-b" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,34 C480,0 960,60 1440,24 L1440,60 L0,60 Z" style="fill:var(--paper-2)"/></svg>
+</section>
+
+<footer class="foot" style="margin-top:0">
+  <div class="wrap">
+    <div class="mark"><i></i> 4P และ 5 Product Levels <em>METRANS · เอกสารภายใน</em></div>
+    <p><b>ที่มาของข้อมูล</b> canvas 6W1H กลุ่มเป้าหมาย B2B · บันทึกที่คุณ Tidarat จดจากการปรึกษา (ใช้เป็นแนวทาง ไม่ได้ทำตามทุกข้อ) · กรอบ 4P-4C-4E และ 5 Product Levels ของ Kotler · งานเตรียมคอนเทนต์ก่อนหน้า</p>
+    <p>หน้านี้ไม่มีตัวเลขราคา ปริมาณ หรือผลงานลูกค้า ข้อความสีทองในวงเล็บคือค่าที่ยังไม่กำหนดหรือยังไม่ยืนยัน · มีส่วนที่ใช้ภายในเท่านั้น ห้ามส่งต่อลูกค้าโดยไม่ตัดออก · ปรับปรุง 9 พ.ย. 2569</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* reveal below the first screen only */
+  if(!reduce && 'IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.remove('pre');io.unobserve(e.target)}})},{threshold:.08,rootMargin:'0px 0px -5% 0px'});
+    $$('.rv').forEach(function(e){if(e.getBoundingClientRect().top>innerHeight){e.classList.add('pre');io.observe(e)}});
+  }
+
+  /* placeholders inside level chips */
+  $$('.lv li, .pl li').forEach(function(li){li.innerHTML=li.innerHTML.replace(/\[([^\]]+)\]/g,'<span class="ph">[$1]</span>')});
+
+  /* progress + nav */
+  var prog=$('#prog'), links=$$('.top nav a'), ids=['levels','matrix','principles','trip','gaps'];
+  function onScroll(){
+    var y=scrollY, h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.transform='scaleX('+(h>0?y/h:0)+')';
+    var cur=null; ids.forEach(function(id){var el=document.getElementById(id);if(el.getBoundingClientRect().top<innerHeight*.4)cur=id});
+    links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+cur)});
+  }
+  addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  /* 5 levels: card in view lights its ring; ring click scrolls to card */
+  var rings=$$('.onion .ring'), cards=$$('.lv[data-lv]');
+  function lightLv(n){rings.forEach(function(r){r.classList.toggle('on',r.dataset.lv===String(n))});cards.forEach(function(c){c.classList.toggle('on',c.dataset.lv===String(n))})}
+  lightLv(1);
+  if('IntersectionObserver' in window){
+    var lio=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting)lightLv(e.target.dataset.lv)})},{rootMargin:'-45% 0px -45% 0px'});
+    cards.forEach(function(c){lio.observe(c)});
+  }
+  function goLv(n){lightLv(n);document.getElementById('lv'+n).scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'})}
+  rings.forEach(function(r){
+    r.addEventListener('click',function(){goLv(r.dataset.lv)});
+    r.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();goLv(r.dataset.lv)}});
+  });
+
+  /* segmented controls */
+  function glide(seg){var b=$('[aria-pressed=true]',seg),g=$('.glide',seg);if(!b||!g)return;g.style.width=b.offsetWidth+'px';g.style.transform='translateX('+b.offsetLeft+'px)'}
+  function press(seg,v){$$('button',seg).forEach(function(x){x.setAttribute('aria-pressed',String(x.dataset.v===v))});glide(seg)}
+  var segs=[$('#fSeg'),$('#fLens')];
+  segs.forEach(glide); addEventListener('resize',function(){segs.forEach(glide)});
+  document.fonts&&document.fonts.ready.then(function(){segs.forEach(glide)});
+
+  /* segment state: shared by hero picker and matrix */
+  var cells=$$('#mx .cell'), heads=$$('#mx .ch[data-col]');
+  function setSeg(v){
+    press($('#fSeg'),v);
+    $$('#picker button').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.v===v))});
+    cells.forEach(function(c){
+      var col=c.dataset.col, show=v==='all'||col===v||col==='all';
+      c.classList.toggle('dim',!show); c.classList.toggle('off',!show); c.classList.toggle('hit',v!=='all'&&col===v);
+    });
+    heads.forEach(function(h){h.classList.toggle('on',v!=='all'&&h.dataset.col===v)});
+  }
+  $('#fSeg').addEventListener('click',function(e){var b=e.target.closest('button');if(b)setSeg(b.dataset.v)});
+  $$('#picker button').forEach(function(b){b.addEventListener('click',function(){setSeg(b.dataset.v);if(b.dataset.v!=='all')document.getElementById('matrix').scrollIntoView({behavior:reduce?'auto':'smooth'})})});
+
+  /* lens: swap row headings to 4C / 4E */
+  function setLens(v){
+    press($('#fLens'),v);
+    $$('#mx .rh [data-p]').forEach(function(el){
+      var t=el.dataset[v]; if(el.textContent===t) return;
+      if(reduce){el.textContent=t;return}
+      el.style.opacity=0; setTimeout(function(){el.textContent=t;el.style.opacity=1},160);
+    });
+  }
+  $('#fLens').addEventListener('click',function(e){var b=e.target.closest('button');if(b)setLens(b.dataset.v)});
+  $$('#mx .rh h3').forEach(function(h){h.style.transition='opacity .3s'});
+
+  /* checklist */
+  var boxes=$$('#cklist input'), KEY='metrans-4p-checklist';
+  try{var saved=JSON.parse(localStorage.getItem(KEY)||'[]');boxes.forEach(function(b){b.checked=saved.indexOf(b.id)>-1})}catch(e){}
+  function upd(){
+    var on=boxes.filter(function(b){return b.checked}), n=on.length;
+    $('#ckN').textContent=n; $('#ckBar').style.width=(n/boxes.length*100)+'%';
+    $('#ckMsg').textContent=n===0?'ยังไม่มีเรื่องที่ยืนยัน':n===boxes.length?'ยืนยันครบ แทนค่าในวงเล็บสีทองก่อนส่งลูกค้า':'ยืนยันแล้ว '+n+' เหลือ '+(boxes.length-n)+' เรื่อง';
+    try{localStorage.setItem(KEY,JSON.stringify(on.map(function(b){return b.id})))}catch(e){}
+  }
+  boxes.forEach(function(b){b.addEventListener('change',upd)});
+  $('#ckReset').addEventListener('click',function(){boxes.forEach(function(b){b.checked=false});upd()});
+  upd();
+})();
+</script>
+</body>
+</html>
